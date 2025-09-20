@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home - Firebase Auth Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Firebase Auth Demo</h1>
+    <div id="user-info"></div>
+  </div>
+
+  <!-- Firebase Init -->
+  <script type="module" src="firebase-init.js"></script>
+
+  <script type="module">
+    import {
+      onAuthStateChanged,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const userInfo = document.getElementById("user-info");
+
+    onAuthStateChanged(window.auth, (user) => {
+      if (user) {
+        userInfo.innerHTML = `
+          <div class="card">
+            <p>You are logged in as <b>${user.email}</b></p>
+            <p>Name: <b>${user.displayName || "User"}</b></p>
+            <img src="${user.photoURL || './user.png'}" alt="User Photo">
+            <button id="logout">Logout</button>
+          </div>
+        `;
+        document.getElementById("logout").onclick = () => signOut(window.auth);
+      } else {
+        userInfo.innerHTML = `
+          <p>You are not logged in.</p>
+          <a class="btn-link" href="login.html">Login</a> | 
+          <a class="btn-link" href="signup.html">Signup</a>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
